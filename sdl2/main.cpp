@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
     TTF_Init();
     g = new GraphicsSDL(renderer,FONT_PATH,12);
     editor = GraphEditor::getInstance();
+    editor->loadRectifier();
     running = true;
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(mainLoop,0,1);

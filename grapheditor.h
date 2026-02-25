@@ -64,6 +64,7 @@ public:
     static void drawACVoltageSource(GraphicsAdapter& g,int x,int y,int size);
     static void drawGround(GraphicsAdapter&g,int x,int y,int size);
 
+
     static inline GraphEditor* getInstance(){
         if(instance == nullptr)
             instance = new GraphEditor();
@@ -77,9 +78,15 @@ public:
             }
         }
     }
+    
+    void clear();
+    void loadRectifier();
+
     void draw(GraphicsAdapter& g);
 
     static double terminalRadius(int size);
+    void focusComponent(size_t);
+    void addComponent(int x,int y, Component* model);
     void mouseMoveEvent(int x,int y) override;
     void mousePressEvent(int x, int y, int button) override;
     void mouseReleaseEvent(int x, int y, int button) override;

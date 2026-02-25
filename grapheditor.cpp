@@ -29,8 +29,8 @@ void GraphEditor::addConnection(size_t comp1, size_t term1, size_t comp2, size_t
 
 void GraphEditor::eraseComponent(size_t comp)
 {
-    //Never remove the Ground Component
     resetSimulation();
+    //Never remove the Ground Component
     if(comp == 0) return;
     plotPane.removeInfoCard(comp-1);
     settingsPane.removeInfoCard(comp-1);
@@ -344,7 +344,8 @@ void GraphEditor::restartSimulation(){
     simulationIsRunning = solver.computeNodes();
 }
 
-void GraphEditor::simulationStep(){
+void GraphEditor::simulationStep()
+{
     if(simulationIsRunning && !simulationPaused){
         double time = solver.getSimulationTime();
         for(size_t i = 1;i<rendercomponents.size();i++){
@@ -354,6 +355,54 @@ void GraphEditor::simulationStep(){
         }
         solver.implicitEulerStep();
     }
+}
+
+void GraphEditor::clear()
+{
+    for(auto& comp : rendercomponents)
+        delete comp.getModel();
+    rendercomponents.resize(1);
+    connections.clear();
+}
+
+void GraphEditor::addComponent(int x,int y,Component* model)
+{
+    PlotCard* p = new PlotCard();
+    SettingsCard* s = new SettingsCard(model);
+    rendercomponents.push_back(RenderComponent(x,y,model,p));
+    plotPane.registerInfoCard(p);
+    settingsPane.registerInfoCard(s);
+}
+
+void GraphEditor::loadRectifier()
+{
+    clear();
+    Diode* diodes[4] = {new Diode(),new Diode(),new Diode(),new Diode()};
+    Resistor* r = new Resistor(1000);
+    ACVoltageSource *v = new ACVoltageSource(5,200);
+    Capacitor* c = new Capacitor(120*1e-6);
+    addComponent(200,100,v);
+    addComponent(100,200,diodes[0]);
+    addComponent(300,200,diodes[1]);
+    addComponent(100,300,diodes[2]);
+    addComponent(300,300,diodes[3]);
+    addComponent(200,400,r);
+    addComponent(200,500,c);
+    addConnection(0,0,1,0);
+    addConnection(1,0,2,1);
+    addConnection(1,1,3,0);
+    addConnection(1,0,4,0);
+    addConnection(1,1,5,1);
+    addConnection(2,0,6,1);
+    addConnection(3,1,6,0);
+    addConnection(4,1,6,0);
+    addConnection(5,0,6,1);
+    addConnection(6,0,7,0);
+    addConnection(6,1,7,1);
+    focusComponent(8);
+    simulationIsRunning = true;
+    simulationPaused = false;
+    restartSimulation();
 }
 
 void GraphEditor::mouseMoveEvent(int x,int y)
@@ -391,6 +440,16 @@ void GraphEditor::mouseMoveEvent(int x,int y)
             return;
         }
     }
+}
+
+void GraphEditor::focusComponent(size_t component)
+{
+    settingsPane.setVisible(true);
+    plotPane.setVisible(true);
+    settingsPane.setSize(paneWidth,paneHeight);
+    plotPane.setSize(paneWidth,paneHeight);
+    plotPane.focusInfoCard(component-1);
+    settingsPane.focusInfoCard(component-1);
 }
 
 void GraphEditor::mousePressEvent(int x, int y, int button)
@@ -458,12 +517,7 @@ void GraphEditor::mousePressEvent(int x, int y, int button)
     }
     if(button == GraphEditor::MOUSE_BUTTON_RIGHT){
         if(hoveredComponent >= 1){
-            settingsPane.setVisible(true);
-            plotPane.setVisible(true);
-            settingsPane.setSize(paneWidth,paneHeight);
-            plotPane.setSize(paneWidth,paneHeight);
-            plotPane.focusInfoCard(hoveredComponent-1);
-            settingsPane.focusInfoCard(hoveredComponent-1);
+            focusComponent(hoveredComponent);
         }
     }
 }
