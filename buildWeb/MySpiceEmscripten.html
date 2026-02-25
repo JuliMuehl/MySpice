@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+    <style>
+body {
+  font-family: arial;
+  margin: 0;
+  padding: none;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+/* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+canvas.emscripten { border: 0px none; background-color: black;  width:100vw;height:100vh;display:block;}
+
+</style>
+  </head>
+  <body>
+
+      <canvas class="emscripten" id="canvas"></canvas>
+    <script type='text/javascript'>
+      var canvasElement = document.getElementById('canvas');
+      canvasElement.addEventListener("contextmenu",(e) => e.preventDefault());
+      canvasElement.addEventListener('webglcontextlost', (e) => {
+        alert('WebGL context lost. You will need to reload the page.');
+        e.preventDefault();
+      }, false);
+
+      var Module = {
+        canvas: canvasElement,
+        totalDependencies: 0,
+        monitorRunDependencies(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+        }
+      };
+    </script>
+    <script async type="text/javascript" src="MySpiceEmscripten.js"></script>
+  </body>
+</html>
