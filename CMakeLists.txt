@@ -11,7 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_QT "Build Qt frontend" OFF)
 option(BUILD_SDL "Build SDL frontend" OFF)
-option(EMSCRIPTEN "Build Emscripten frontend" OFF)
 
 if(EMSCRIPTEN)
     add_executable(MySpiceEmscripten
