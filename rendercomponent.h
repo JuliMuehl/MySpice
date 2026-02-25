@@ -40,6 +40,7 @@ public:
     inline bool isGround(){
         return model == nullptr;
     }
+    void clear();
     void draw(GraphicsAdapter& g, int size, int offsetx, int offsety, bool drawTerminals);
     RenderComponent(int x,int y,Component* modelp, PlotCard* plotCard):
         x(x),y(y),
