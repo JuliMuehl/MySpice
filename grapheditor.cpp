@@ -387,8 +387,8 @@ void GraphEditor::loadRectifier()
     addComponent(x + 300,200,diodes[1]);
     addComponent(x + 100,300,diodes[2]);
     addComponent(x + 300,300,diodes[3]);
-    addComponent(x + 200,400,r);
-    addComponent(x + 200,500,c);
+    addComponent(x + 200,300,r);
+    addComponent(x + 200,400,c);
     addConnection(0,0,1,0);
     addConnection(1,0,2,1);
     addConnection(1,1,3,0);
